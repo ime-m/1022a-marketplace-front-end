@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { Link } from 'react-router-dom'
+import { Link} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 // Tipo para produtos
 type ProdutoType = {
   id: number,
@@ -20,21 +21,30 @@ type UsuarioType = {
 }
 
 function App() {
+  const navegate = useNavigate()
   const [produtos, setProdutos] = useState<ProdutoType[]>([])
   const [usuarios, setUsuarios] = useState<UsuarioType[]>([])
 
   // useEffect para carregar produtos e usuários
   useEffect(() => {
     // Buscar os produtos
-    fetch("https://one022a-marketplace-e90o.onrender.com/produtos")
+    fetch("http://localhost:8000/produtos")
       .then(resposta => resposta.json())
       .then(dados => setProdutos(dados))
 
     // Buscar os usuários
-    fetch("https://one022a-marketplace-e90o.onrender.com/usuarios")
+    fetch("http://localhost:8000/produtos")
       .then(resposta => resposta.json())
       .then(dados => setUsuarios(dados))
   }, [])
+
+  function handleExcluir(id:number){
+    alert(`Excluir o produto com id ${id}`)
+    fetch(`http://localhost:8000/produtos/${id}`, {
+      method: 'DELETE'
+    })
+    // Atualizar a lista de produtos
+  }
 
   return (
     <>
@@ -72,6 +82,8 @@ function App() {
                 <p className="produto-preco">{produto.preco}</p>
                 <p className="produto-descricao">{produto.descricao}</p>
                 <button className="botao-comprar">Comprar</button>
+                <button onClick={() => handleExcluir(produto.id)}>Excluir</button>
+                <Link to="">Alterar</Link>
               </div>
             ))
           }
